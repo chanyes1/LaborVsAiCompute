@@ -3,13 +3,17 @@ Datascience Dashboard on "Autonomous Agentic Workflows" vs "Human Labor"
 
 # Jobs of each member
 1. Repo Owner (Yves Chandler Castillo)
-    -Project setup + Dataset 
-    -Table Engine 
+- Make branch "feature/data-engine" 
 2. Data Visualization (add your name)
-    -Charts       
+- Make branch "feature/visualization"
 3. Statistical Analysis Engine (add your name)
+- Make branch "feature/statistics"
+4. ALL STUDENTS
+- Copy functions from Gen-Instruction.html
+- Do pull request
+- Reviewed by at least 1 other 
+- Merge into main
 ### Read Gen-Instruction.html for more information
-
 
 ## The CSV File
 The CSV file has the following data: 
