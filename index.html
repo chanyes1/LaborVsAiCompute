@@ -2430,6 +2430,40 @@ function renderStats(data) {
     console.error("renderStats error:", e);
   }
 }
+function renderStats(data) {
+  try {
+    const scores = data.map((row) =>
+      typeof row.score === 'number' ? row.score : row.Automation_Risk_Index
+    );
+
+    const scoreMean = mean(scores);
+    const scoreMedian = median(scores);
+    const scoreMode = mode(scores);
+    const scoreVariance = variance(scores);
+    const scoreStdDev = stdDev(scores);
+
+    const setValue = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = value;
+      }
+    };
+
+    setValue('statMean', scoreMean);
+    setValue('statMedian', scoreMedian);
+    setValue('statStdDev', scoreStdDev);
+    setValue('statMode', scoreMode);
+
+    setValue('dCount', scores.length);
+    setValue('dMin', Math.min(...scores));
+    setValue('dMax', Math.max(...scores));
+    setValue('dRange', +(Math.max(...scores) - Math.min(...scores)).toFixed(2));
+    setValue('dVariance', scoreVariance);
+    setValue('dStdDev', scoreStdDev);
+  } catch (error) {
+    console.error("renderStats error:", error);
+  }
+}
 </script>
 </body>
 </html>
