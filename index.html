@@ -2430,10 +2430,28 @@ function renderStats(data) {
     console.error("renderStats error:", e);
   }
 }
+function pearsonCorr(x, y) {
+  const xMean = x.reduce((sum, value) => sum + value, 0) / x.length;
+  const yMean = y.reduce((sum, value) => sum + value, 0) / y.length;
+  const numerator = x.reduce(
+    (sum, value, index) => sum + (value - xMean) * (y[index] - yMean),
+    0
+  );
+  const denominator = Math.sqrt(
+    x.reduce((sum, value) => sum + (value - xMean) ** 2, 0) *
+    y.reduce((sum, value) => sum + (value - yMean) ** 2, 0)
+  );
+
+  return +(numerator / denominator).toFixed(4);
+}
+
 function renderStats(data) {
   try {
     const scores = data.map((row) =>
       typeof row.score === 'number' ? row.score : row.Automation_Risk_Index
+    );
+    const studyHours = data.map((row) =>
+      typeof row.studyHours === 'number' ? row.studyHours : row.Substitution_Elasticity
     );
 
     const scoreMean = mean(scores);
@@ -2441,6 +2459,13 @@ function renderStats(data) {
     const scoreMode = mode(scores);
     const scoreVariance = variance(scores);
     const scoreStdDev = stdDev(scores);
+    const correlation = pearsonCorr(studyHours, scores);
+    const strength = Math.abs(correlation) >= 0.7
+      ? 'Strong'
+      : Math.abs(correlation) >= 0.4
+        ? 'Moderate'
+        : 'Weak';
+    const direction = correlation >= 0 ? 'Positive' : 'Negative';
 
     const setValue = (id, value) => {
       const element = document.getElementById(id);
@@ -2460,6 +2485,8 @@ function renderStats(data) {
     setValue('dRange', +(Math.max(...scores) - Math.min(...scores)).toFixed(2));
     setValue('dVariance', scoreVariance);
     setValue('dStdDev', scoreStdDev);
+    setValue('rPearson', correlation);
+    setValue('rInterp', `${strength} ${direction} Correlation`);
   } catch (error) {
     console.error("renderStats error:", error);
   }
