@@ -4,9 +4,9 @@ Datascience Dashboard on "Autonomous Agentic Workflows" vs "Human Labor"
 # Jobs of each member
 1. Repo Owner (Yves Chandler Castillo)
 - Make branch "feature/data-engine" 
-2. Data Visualization (add your name)
+2. Data Visualization (Bagahas)
 - Make branch "feature/visualization"
-3. Statistical Analysis Engine (add your name)
+3. Statistical Analysis Engine (John Kenneth)
 - Make branch "feature/statistics"
 4. ALL STUDENTS
 - Copy functions from Gen-Instruction.html
