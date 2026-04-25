@@ -2341,15 +2341,23 @@ function median(arr) {
 }
 
 function mode(arr) {
-  const freq = {};
-  arr.forEach(x => { freq[x] = (freq[x] || 0) + 1; });
-  const max = Math.max(...Object.values(freq));
-  return Object.keys(freq).filter(k => freq[k] === max).join(' & ');
+  const counts = Object.create(null);
+
+  arr.forEach((value) => {
+    counts[value] = (counts[value] || 0) + 1;
+  });
+
+  const highestCount = Math.max(...Object.values(counts));
+  return Object.keys(counts)
+    .filter((value) => counts[value] === highestCount)
+    .sort((a, b) => Number(a) - Number(b))
+    .join(' & ');
 }
 
 function variance(arr) {
-  const m = mean(arr);
-  return +(arr.reduce((s, x) => s + (x - m) ** 2, 0) / arr.length).toFixed(2);
+  const average = arr.reduce((sum, value) => sum + value, 0) / arr.length;
+  const squaredDiffTotal = arr.reduce((sum, value) => sum + (value - average) ** 2, 0);
+  return +(squaredDiffTotal / arr.length).toFixed(2);
 }
 
 function stdDev(arr) {
