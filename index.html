@@ -889,6 +889,7 @@ function onDataReady() {
 
   // Student 3: call your stats renderer here
   // Example: renderStats(window.DS);
+  renderStats(window.DS);
 
   console.log("✅ onDataReady() fired. window.DS has", window.DS.length, "rows.");
 }
@@ -1206,7 +1207,9 @@ function getChartDefaults() {
 function mean(arr) {
   // TODO: Implement this function
   // Hint: use arr.reduce() to sum, then divide by arr.length
-  throw new Error("Student 3: mean() not implemented yet");
+  if (!Array.isArray(arr) || arr.length === 0) return 0;
+  const sum = arr.reduce((total, value) => total + Number(value), 0);
+  return Number((sum / arr.length).toFixed(2));
 }
 
 /**
@@ -1229,7 +1232,13 @@ function mean(arr) {
 function median(arr) {
   // TODO: Implement this function
   // Hint: [...arr].sort((a,b) => a-b) for a sorted copy (do not mutate original)
-  throw new Error("Student 3: median() not implemented yet");
+  if (!Array.isArray(arr) || arr.length === 0) return 0;
+  const sorted = [...arr].map(Number).sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const medianValue = sorted.length % 2 === 0
+    ? (sorted[mid - 1] + sorted[mid]) / 2
+    : sorted[mid];
+  return Number(medianValue.toFixed(2));
 }
 
 /**
@@ -1249,7 +1258,19 @@ function median(arr) {
  */
 function mode(arr) {
   // TODO: Implement this function
-  throw new Error("Student 3: mode() not implemented yet");
+  if (!Array.isArray(arr) || arr.length === 0) return "";
+  const frequency = arr.reduce((counts, value) => {
+    const key = String(Number(value));
+    counts[key] = (counts[key] || 0) + 1;
+    return counts;
+  }, {});
+  const maxCount = Math.max(...Object.values(frequency));
+  const modes = Object.keys(frequency)
+    .filter(key => frequency[key] === maxCount)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map(String);
+  return modes.join(" & ");
 }
 
 /**
@@ -1284,7 +1305,12 @@ function variance(arr) {
 function stdDev(arr) {
   // TODO: Implement this function
   // Hint: Math.sqrt(variance(arr))
-  throw new Error("Student 3: stdDev() not implemented yet");
+  if (!Array.isArray(arr) || arr.length === 0) return 0;
+  const meanValue = mean(arr);
+  const variance = arr
+    .map(Number)
+    .reduce((total, value) => total + Math.pow(value - meanValue, 2), 0) / arr.length;
+  return Number(Math.sqrt(variance).toFixed(2));
 }
 
 /**
@@ -1360,7 +1386,18 @@ function linearRegression(x, y) {
 function renderStats(data) {
   // TODO: Implement this function
   // Hint: use try/catch so errors in your stat functions don't crash the page
-  console.warn("⚠ Student 3: renderStats() is not yet implemented.");
+  try {
+    const scores = Array.isArray(data)
+      ? data.map(item => Number(item.score)).filter(value => !Number.isNaN(value))
+      : [];
+
+    document.getElementById('statMean').textContent = mean(scores).toFixed(2);
+    document.getElementById('statMedian').textContent = median(scores).toFixed(2);
+    document.getElementById('statStdDev').textContent = stdDev(scores).toFixed(2);
+    document.getElementById('statMode').textContent = mode(scores) || '—';
+  } catch (error) {
+    console.error('Student 3: renderStats failed', error);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────
