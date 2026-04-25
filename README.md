@@ -1,6 +1,16 @@
 # LaborVsAiCompute
 Datascience Dashboard on "Autonomous Agentic Workflows" vs "Human Labor"
 
+# Jobs of each member
+1. Repo Owner (Yves Chandler Castillo)
+    -Project setup + Dataset 
+    -Table Engine 
+2. Data Visualization (add your name)
+    -Charts       
+3. Statistical Analysis Engine (add your name)
+### Read Gen-Instruction.html for more information
+
+
 ## The CSV File
 The CSV file has the following data: 
 ### Rows
