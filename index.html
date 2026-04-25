@@ -600,12 +600,19 @@
       <div class="toolbar">
         <input type="text" id="filterInput" placeholder="Filter by student name..." />
         <select id="sortSelect">
-          <option value="">Sort by...</option>
-          <option value="name">Name</option>
-          <option value="studyHours">Study Hours</option>
-          <option value="score">Final Score</option>
-          <option value="grade">Grade</option>
-          <option value="attendance">Attendance %</option>
+          <option>Sort by.....</option>
+          <option value="role_id">Role_ID</option>
+          <option value="industry">Industry</option>
+          <option value="human_labor_cost_hr">Human_Labor_Cost_hr</option>
+          <option value="tokens_per_human_hour">Tokens_per_Human_Hour</option>
+          <option value="inference_cost_2026">Inference_Cost_2026</option>
+          <option value="agent_labor_equivalent_cost">Agent_Labor_Equivalent_Cost</option>
+          <option value="substitution_elasticity">Substitution_Elasticity</option>
+          <option value="ai_augmentation_factor">AI_Augmentation_Factor</option>
+          <option value="automation_risk_index">Automation_Risk_Index</option>
+          <option value="hardware_capex_sensitivity">Hardware_CapEx_Sensitivity</option>
+          <option value="regulatory_moat">Regulatory_Moat</option>
+          <option value="substitution_year_est">Substitution_Year_Est</option>
         </select>
         <button onclick="applyFilterSort()">Apply</button>
         <button onclick="resetTable()">Reset</button>
@@ -17705,17 +17712,10 @@ function onDataReady() {
  *  4. Update #rowCount with the total number of rows
  */
 function loadDataset() {
-    window.DS = [...RAW_DATA];
-    renderTable(window.DS);
-    document.getElementById('rowCount').textContent = window.DS.length + '  rows';
-    onDataReady();
-  // TODO: Implement this function
-  // Hint: window.DS = [...RAW_DATA];
-  // Hint: renderTable(window.DS);
-  // Hint: document.getElementById('rowCount').textContent = window.DS.length + ' rows';
-  // Hint: onDataReady();
-
-  console.warn("⚠ Student 1: loadDataset() is not yet implemented.");
+  window.DS = [...RAW_DATA];
+  renderTable(window.DS);
+  document.getElementById('rowCount').textContent = window.DS.length + ' rows';
+  onDataReady();
 }
 
 /**
@@ -17742,8 +17742,32 @@ function loadDataset() {
  *  </tr>
  */
 function renderTable(data) {
-  // TODO: Implement this function
-  console.warn("⚠ Student 1: renderTable() is not yet implemented.");
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:var(--text-dim); font-family:var(--mono); padding:40px;">No results found.</td></tr>`;
+    return;
+  }
+
+  data.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row.Role_ID}</td>
+      <td>${row.Industry}</td>
+      <td class="numeric">${row.Human_Labor_Cost_hr}</td>
+      <td class="numeric">${row.Tokens_per_Human_Hour}</td>
+      <td class="numeric">${row.Inference_Cost_2026}</td>
+      <td class="numeric">${row.Agent_Labor_Equivalent_Cost}</td>
+      <td class="numeric">${row.Substitution_Elasticity}</td>
+      <td class="numeric">${row.AI_Augmentation_Factor}</td>
+      <td class="numeric">${row.Automation_Risk_Index}</td>
+      <td class="numeric">${row.Hardware_CapEx_Sensitivity}</td>
+      <td>${row.Regulatory_Moat}</td>
+      <td class="numeric">${row.Substitution_Year_Est}</td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 /**
@@ -17762,8 +17786,40 @@ function renderTable(data) {
  *  'name' → alphabetical, others → numeric descending
  */
 function applyFilterSort() {
-  // TODO: Implement this function
-  console.warn("⚠ Student 1: applyFilterSort() is not yet implemented.");
+  const query = document.getElementById('filterInput').value.toLowerCase();
+  const sortKey = document.getElementById('sortSelect').value;
+
+  let result = window.DS.filter(row =>
+    row.Role_ID.toLowerCase().includes(query) ||
+    row.Industry.toLowerCase().includes(query)
+  );
+
+  if (sortKey === 'role_id') {
+    result.sort((a, b) => a.Role_ID.localeCompare(b.Role_ID));
+  } else if (sortKey === 'industry') {
+    result.sort((a, b) => a.Industry.localeCompare(b.Industry));
+  } else if (sortKey === 'regulatory_moat') {
+    const order = { High: 0, Med: 1, Low: 2 };
+    result.sort((a, b) => (order[a.Regulatory_Moat] ?? 3) - (order[b.Regulatory_Moat] ?? 3));
+  } else if (sortKey) {
+    // Map option values to actual RAW_DATA property names
+    const keyMap = {
+      human_labor_cost_hr: 'Human_Labor_Cost_hr',
+      tokens_per_human_hour: 'Tokens_per_Human_Hour',
+      inference_cost_2026: 'Inference_Cost_2026',
+      agent_labor_equivalent_cost: 'Agent_Labor_Equivalent_Cost',
+      substitution_elasticity: 'Substitution_Elasticity',
+      ai_augmentation_factor: 'AI_Augmentation_Factor',
+      automation_risk_index: 'Automation_Risk_Index',
+      hardware_capex_sensitivity: 'Hardware_CapEx_Sensitivity',
+      substitution_year_est: 'Substitution_Year_Est',
+    };
+    const prop = keyMap[sortKey] || sortKey;
+    result.sort((a, b) => b[prop] - a[prop]); // numeric descending
+  }
+
+  renderTable(result);
+  document.getElementById('rowCount').textContent = result.length + ' rows';
 }
 
 /**
@@ -17778,8 +17834,10 @@ function applyFilterSort() {
  *  4. Update #rowCount
  */
 function resetTable() {
-  // TODO: Implement this function
-  console.warn("⚠ Student 1: resetTable() is not yet implemented.");
+  document.getElementById('filterInput').value = '';
+  document.getElementById('sortSelect').value = '';
+  renderTable(window.DS);
+  document.getElementById('rowCount').textContent = window.DS.length + ' rows';
 }
 
 /* Student 1 entry point — runs when DOM is ready */
