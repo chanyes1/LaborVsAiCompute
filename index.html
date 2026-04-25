@@ -2325,14 +2325,19 @@ function getChartDefaults() {
 ═══════════════════════════════════════════════════════════════════ */
 
 function mean(arr) {
-  return +(arr.reduce((s, x) => s + x, 0) / arr.length).toFixed(2);
+  const total = arr.reduce((sum, value) => sum + value, 0);
+  return +(total / arr.length).toFixed(2);
 }
 
 function median(arr) {
-  const s = [...arr].sort((a, b) => a - b);
-  const n = s.length;
-  return n % 2 === 1 ? +s[Math.floor(n/2)].toFixed(2)
-                     : +((s[n/2-1] + s[n/2]) / 2).toFixed(2);
+  const sorted = [...arr].sort((a, b) => a - b);
+  const middleIndex = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 1) {
+    return +sorted[middleIndex].toFixed(2);
+  }
+
+  return +((sorted[middleIndex - 1] + sorted[middleIndex]) / 2).toFixed(2);
 }
 
 function mode(arr) {
