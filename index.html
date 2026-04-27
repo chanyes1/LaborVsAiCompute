@@ -2164,6 +2164,50 @@ document.addEventListener('DOMContentLoaded', () => {
      Pie Chart    → Regulatory_Moat breakdown (High / Med / Low)
 ═══════════════════════════════════════════════════════════════════ */
 
+function initCharts() {
+  if (window.CHARTS['barChart'])     window.CHARTS['barChart'].destroy();
+  if (window.CHARTS['scatterChart']) window.CHARTS['scatterChart'].destroy();
+  if (window.CHARTS['histChart'])    window.CHARTS['histChart'].destroy();
+  if (window.CHARTS['pieChart'])     window.CHARTS['pieChart'].destroy();
+
+  drawBarChart('barChart', window.DS);
+  drawScatterPlot('scatterChart', window.DS);
+  drawHistogram('histChart', window.DS);
+  drawPieChart('pieChart', window.DS);
+}
+
+/* Bar Chart — Average Human Labor Cost per Industry */
+function drawBarChart(canvasId, data) {
+  // Group by Industry, compute average Human_Labor_Cost_hr
+  const groups = {};
+  data.forEach(d => {
+    if (!groups[d.Industry]) groups[d.Industry] = { sum: 0, count: 0 };
+    groups[d.Industry].sum   += d.Human_Labor_Cost_hr;
+    groups[d.Industry].count += 1;
+  });
+  const labels  = Object.keys(groups).sort();
+  const avgs    = labels.map(l => +(groups[l].sum / groups[l].count).toFixed(2));
+
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  window.CHARTS[canvasId] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{ label: 'Avg Human Labor Cost ($/hr)', data: avgs,
+        backgroundColor: 'rgba(240,180,41,0.8)', borderColor: '#f0b429', borderWidth: 1 }]
+    },
+    options: {
+      ...getChartDefaults(),
+      scales: {
+        ...getChartDefaults().scales,
+        x: { ...getChartDefaults().scales.x, title: { display:true, text:'Industry', color:'#6b748f' } },
+        y: { ...getChartDefaults().scales.y, title: { display:true, text:'Avg Labor Cost ($/hr)', color:'#6b748f' }, min:0 }
+      }
+    }
+  });
+  document.getElementById('barPlaceholder').style.display  = 'none';
+  document.getElementById(canvasId).style.display = 'block';
+}
 
 
 /* ═══════════════════════════════════════════════════════════════════
