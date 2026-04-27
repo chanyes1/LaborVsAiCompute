@@ -2269,7 +2269,34 @@ function drawHistogram(canvasId, data) {
   document.getElementById(canvasId).style.display = 'block';
 }
 
+/* Pie Chart — Regulatory Moat distribution (High / Med / Low) */
+function drawPieChart(canvasId, data) {
+  const counts = { High:0, Med:0, Low:0 };
+  data.forEach(d => { if (counts[d.Regulatory_Moat] !== undefined) counts[d.Regulatory_Moat]++; });
+  const labels = ['High','Med','Low'];
+  const vals   = [counts.High, counts.Med, counts.Low];
+  const colors = ['#56d364','#f0b429','#e05c6a'];
 
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  window.CHARTS[canvasId] = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: vals, backgroundColor: colors, borderColor:'#151820', borderWidth:2 }] },
+    options: {
+      responsive:true, maintainAspectRatio:true, cutout:'55%',
+      plugins: {
+        legend: { position:'bottom', labels:{ color:'#6b748f', font:{ family:'Courier Prime', size:11 } } },
+        tooltip: { ...getChartDefaults().plugins.tooltip,
+          callbacks: { label: ctx => {
+            const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+            return `${ctx.label}: ${ctx.raw} (${((ctx.raw/total)*100).toFixed(1)}%)`;
+          } }
+        }
+      }
+    }
+  });
+  document.getElementById('piePlaceholder').style.display = 'none';
+  document.getElementById(canvasId).style.display = 'block';
+}
 /* ═══════════════════════════════════════════════════════════════════
    STUDENT 3 — STATISTICAL ANALYSIS ENGINE
    Stats now use:  primary numeric = Automation_Risk_Index
