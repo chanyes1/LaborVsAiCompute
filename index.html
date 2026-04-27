@@ -2209,6 +2209,36 @@ function drawBarChart(canvasId, data) {
   document.getElementById(canvasId).style.display = 'block';
 }
 
+/* Scatter Plot — Substitution Elasticity vs Automation Risk Index */
+function drawScatterPlot(canvasId, data) {
+  const points = data.map(d => ({ x: d.Substitution_Elasticity, y: d.Automation_Risk_Index, id: d.Role_ID }));
+
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  window.CHARTS[canvasId] = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [{ label: 'Roles', data: points,
+        backgroundColor: '#3ecfcf', borderColor: '#3ecfcf', pointRadius: 4, pointHoverRadius: 6 }]
+    },
+    options: {
+      ...getChartDefaults(),
+      plugins: {
+        ...getChartDefaults().plugins,
+        tooltip: { ...getChartDefaults().plugins.tooltip,
+          callbacks: { label: ctx => `${ctx.raw.id}: Elasticity ${ctx.raw.x}, Risk ${ctx.raw.y}` }
+        }
+      },
+      scales: {
+        x: { ...getChartDefaults().scales.x, title: { display:true, text:'Substitution Elasticity', color:'#6b748f' } },
+        y: { ...getChartDefaults().scales.y, title: { display:true, text:'Automation Risk Index', color:'#6b748f' }, min:0, max:100 }
+      }
+    }
+  });
+  document.getElementById('scatterPlaceholder').style.display = 'none';
+  document.getElementById(canvasId).style.display = 'block';
+}
+
+
 
 /* ═══════════════════════════════════════════════════════════════════
    STUDENT 3 — STATISTICAL ANALYSIS ENGINE
