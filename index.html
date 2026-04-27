@@ -2297,6 +2297,26 @@ function drawPieChart(canvasId, data) {
   document.getElementById('piePlaceholder').style.display = 'none';
   document.getElementById(canvasId).style.display = 'block';
 }
+
+
+function getChartDefaults() {
+  return {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { labels: { color:'#6b748f', font:{ family:'Courier Prime', size:11 } } },
+      tooltip: {
+        backgroundColor:'#1c2030', borderColor:'#2a2f45', borderWidth:1,
+        titleColor:'#f0b429', bodyColor:'#d4daf0',
+        titleFont:{ family:'Courier Prime' }, bodyFont:{ family:'Courier Prime' }
+      }
+    },
+    scales: {
+      x: { ticks:{ color:'#6b748f', font:{ family:'Courier Prime', size:10 } }, grid:{ color:'#2a2f45' } },
+      y: { ticks:{ color:'#6b748f', font:{ family:'Courier Prime', size:10 } }, grid:{ color:'#2a2f45' } }
+    }
+  };
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    STUDENT 3 — STATISTICAL ANALYSIS ENGINE
    Stats now use:  primary numeric = Automation_Risk_Index
