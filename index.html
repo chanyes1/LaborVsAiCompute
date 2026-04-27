@@ -2238,6 +2238,36 @@ function drawScatterPlot(canvasId, data) {
   document.getElementById(canvasId).style.display = 'block';
 }
 
+/* Histogram — Distribution of Automation Risk Index in 10-point bins */
+function drawHistogram(canvasId, data) {
+  const binLabels = ['0–9','10–19','20–29','30–39','40–49','50–59','60–69','70–79','80–89','90–100'];
+  const binCounts = new Array(10).fill(0);
+  data.forEach(d => {
+    const idx = Math.min(Math.floor(d.Automation_Risk_Index / 10), 9);
+    binCounts[idx]++;
+  });
+
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  window.CHARTS[canvasId] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: binLabels,
+      datasets: [{ label: 'Count', data: binCounts,
+        backgroundColor: 'rgba(224,92,106,0.75)', borderColor: '#e05c6a', borderWidth:1,
+        barPercentage: 1.0, categoryPercentage: 1.0 }]
+    },
+    options: {
+      ...getChartDefaults(),
+      plugins: { ...getChartDefaults().plugins, legend: { display:false } },
+      scales: {
+        x: { ...getChartDefaults().scales.x, title: { display:true, text:'Automation Risk Index Range', color:'#6b748f' } },
+        y: { ...getChartDefaults().scales.y, title: { display:true, text:'Count', color:'#6b748f' }, min:0, ticks:{ stepSize:1 } }
+      }
+    }
+  });
+  document.getElementById('histPlaceholder').style.display = 'none';
+  document.getElementById(canvasId).style.display = 'block';
+}
 
 
 /* ═══════════════════════════════════════════════════════════════════
